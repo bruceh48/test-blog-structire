@@ -1,0 +1,47 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => {
+  return data.category === 'tech';
+});
+
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout title="Tech Articles" description="Browse all technology-related articles">
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-8">Tech Articles</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {sortedPosts.map((post) => (
+        <article class="bg-white rounded-lg shadow-md overflow-hidden">
+          {post.data.thumbnail && (
+            <img
+              src={post.data.thumbnail}
+              alt={post.data.title}
+              class="w-full h-48 object-cover"
+            />
+          )}
+          <div class="p-6">
+            <h2 class="text-xl font-semibold mb-2">
+              <a href={`/blog/tech/${post.slug}`} class="hover:text-blue-600">
+                {post.data.title}
+              </a>
+            </h2>
+            <p class="text-gray-600 mb-4">{post.data.description}</p>
+            <div class="flex flex-wrap gap-2">
+              {post.data.tags.map((tag) => (
+                <a
+                  href={`/tags/${tag}`}
+                  class="text-sm bg-gray-100 px-2 py-1 rounded-full text-gray-600 hover:bg-gray-200"
+                >
+                  #{tag}
+                </a>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </main>
+</Layout>

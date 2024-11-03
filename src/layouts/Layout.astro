@@ -1,0 +1,35 @@
+---
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="bg-gray-50">
+    <nav class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <a href="/" class="flex items-center text-xl font-bold text-gray-900">Blog</a>
+          </div>
+          <div class="flex items-center space-x-4">
+            <a href="/categories" class="text-gray-600 hover:text-gray-900">Categories</a>
+            <a href="/tags" class="text-gray-600 hover:text-gray-900">Tags</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <slot />
+    <footer class="bg-white mt-8 py-4">
+      <div class="max-w-7xl mx-auto px-4 text-center text-gray-600">
+        © 2024 My Blog. All rights reserved.
+      </div>
+    </footer>
+  </body>
+</html>

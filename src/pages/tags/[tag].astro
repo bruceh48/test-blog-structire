@@ -1,0 +1,49 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const tags = [...new Set(posts.flatMap(post => post.data.tags))];
+  
+  return tags.map(tag => ({
+    params: { tag },
+    props: { 
+      posts: posts.filter(post => post.data.tags.includes(tag))
+    },
+  }));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<Layout title={`Posts tagged with #${tag}`} description={`Browse all posts tagged with #${tag}`}>
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-8">Posts tagged with #{tag}</h1>
+    <div class="space-y-8">
+      {posts.map(post => (
+        <article class="bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-2xl font-semibold mb-2">
+            <a href={`/blog/${post.data.category}/${post.slug}`} class="hover:text-blue-600">
+              {post.data.title}
+            </a>
+          </h2>
+          <p class="text-gray-600 mb-4">{post.data.description}</p>
+          <div class="flex gap-2">
+            {post.data.tags.map(t => (
+              <a
+                href={`/tags/${t}`}
+                class={`text-sm px-2 py-1 rounded-full ${
+                  t === tag ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                #{t}
+              </a>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </main>
+</Layout>
